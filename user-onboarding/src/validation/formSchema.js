@@ -26,8 +26,8 @@ const formSchema = yup.object().shape({
       .oneOf(['Student', 'Team Lead', 'Instructor'], "Must select a valid role."),
     birth: yup
       .date()
-      .isType('Must enter in a valid date')
-      .required('Must input your birthday'),
+      .typeError('Must select a valid date'),
+       
   });
 
   export default formSchema;

@@ -30,6 +30,7 @@ function Form(props){
     let [errorValues, setErrorValues] = useState(initialErrorValues);
     let [disabled, setDisabled] = useState(true);
 
+    let optionalFields = ['birth']
     function onSubmit(event){
         event.preventDefault();
         const newUser = formValues;
@@ -69,13 +70,16 @@ function Form(props){
         yup
         .reach(formSchema, name)
         .validate(value)
-        .then(valid => {
+        .then(() => {
             setErrorValues({
                 ...errorValues,
                 [name]: ''
             });
         })
         .catch(error => {
+            if (name === 'birth'){
+                setDisabled(true);
+            }
             setErrorValues({
                 ...errorValues,
                 [name]: error.errors[0]
@@ -84,10 +88,16 @@ function Form(props){
     }
     
     useEffect(() => {
-        formSchema.isValid(formValues)
+        let {birth, ...restOfValues} = formValues  
+        
+        formSchema.isValid(restOfValues)
             .then(valid => {
                 setDisabled(!valid)
-            });
+            })
+            .catch(error => {
+                console.log(error.error[0]);
+            })
+        
     }, [formValues])
 
     return (
